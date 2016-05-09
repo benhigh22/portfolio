@@ -161,26 +161,32 @@ function navigateStickyResponsive() {
 }
 
 function conatctFormSetup() {
+    var message = "";
     $("#contact-form").submit(function() {
+        message = $("#contact-form");
+        var contactName = document.getElementById('contact-name').value;
+        var contactEmail = document.getElementById('contact-email').value;
+        var contactMessage = document.getElementById('contact-message').value;
         $.ajax({
             type: 'POST',
-            url: 'php/postaction.php',
-            data: $(this).serialize(),
-            success: function(msg) {
-                if (msg == 'SUCCESS') {
-                    var response = '<div class="alert alert-success">Thank you! Your message was sent.</div>';
+            url: '//formspree.io/benjaming.high@gmail.com',
+            data: {message: message.serialize()},
+            dataType: 'json',
+            success: function() {
+                if (contactName != 'Name' && contactEmail != 'Email' && contactMessage != '') {
+                    var response = '<div class="alert alert-success">Thank you for your message, I look forward to speaking with you soon.</div>';
                     document.getElementById("contact-form").reset();
                 }
                 else {
-                    var response = '<div class="alert alert-danger">' + msg + '</div>';
+                    var response = '<div class="alert alert-danger">Name, Email, and a message are required.</div>';
                 }
 
                 $("#contact-form > div.alert").remove();
                 $("#contact-form").prepend(response);
             },
 
-            error: function(msg) {
-                var response = '<div class="alert alert-danger">' + msg + '</div>';
+            error: function() {
+                var response = '<div class="alert alert-danger">It looks like you are missing some required info. Please try again.</div>';
                 $("#contact-form > div.alert").remove();
                 $("#contact-form").prepend(response);
             }
